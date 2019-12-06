@@ -1,8 +1,7 @@
 const OJS = require("./index.js");
 const Client = new OJS.Client({
     reconnect: true,
-    controller: true,
-    world: "dimden"
+    controller: true
 });
 
 Client.on("join", () => {
