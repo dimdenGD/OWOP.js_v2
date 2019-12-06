@@ -289,7 +289,7 @@ class Client {
                 return true;
             },
             setPixel(x = OJS.player.x, y = OJS.player.y, color = OJS.player.color, sneaky) {
-                if(OJS.net.ws.readyState !== 1 || !OJS.net.isWebsocketConnected) return false;
+                if(OJS.net.ws.readyState !== 1 || !OJS.net.isWebsocketConnected || OJS.player.rank === OJS.RANK.NONE) return false;
                 if(!OJS.net.bucket.canSpend(1)) return false;
                 const lX = OJS.player.x, lY = OJS.player.y;
                 OJS.world.move(x, y);
@@ -412,6 +412,7 @@ class Client {
                         OJS.emit("id", data.getUint32(1, true));
                         OJS.player.id = data.getUint32(1, true);
                         OJS.net.isWorldConnected = true;
+                        if(typeof OJS.player.rank !== "number") OJS.player.rank = OJS.RANK.NONE;
                         OJS.util.log(chalk.green(`Joined world '${OJS.world.name}' and got id '${data.getUint32(1, true)}'`));
                         if(options.adminlogin) OJS.chat.send("/adminlogin " + options.adminlogin);
                         if(options.modlogin) OJS.chat.send("/modlogin " + options.modlogin); // Not working at the moment
