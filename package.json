@@ -1,0 +1,29 @@
+{
+  "name": "owop.js",
+  "version": "2.0.0",
+  "description": "The OWOP (ourworldofpixels) API.",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dimdenGD/OWOP.js_v2.git"
+  },
+  "keywords": [
+    "owop",
+    "ourworldofpixels",
+    "ourworldofpixels.com",
+    "cursors.me",
+    "ojs",
+    "owop-js"
+  ],
+  "author": "dimden",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/dimdenGD/OWOP.js_v2/issues"
+  },
+  "homepage": "https://github.com/dimdenGD/OWOP.js_v2#readme",
+  "dependencies": {
+    "chalk": "^3.0.0",
+    "ws": "^7.2.0"
+  }
+}
