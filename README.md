@@ -4,7 +4,7 @@ Node.js library for [OWOP](https://ourworldofpixels.com "OWOP"). Support Discord
 Installing: `npm i owop-js`.\
 **REQUIRES NODE.JS 12.0+!**
 
-If you found any bugs, don't forget that you can contribute too! I'm often busy so usually I'm not able to update anything quickly.
+This is quite new package, so if you'll found any bugs, don't forget that you can contribute too! I'm often busy so usually I'm not able to update anything quickly.
 
 # Example
 ```js
