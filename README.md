@@ -1,7 +1,7 @@
 # OWOP.js / OJS - v2
 Node.js library for [OWOP](https://ourworldofpixels.com "OWOP"). Support Discord server - [discord.gg/k4u7ddk](https://discord.gg/k4u7ddk "discord.gg/k4u7ddk").
 
-Installing: `npm i owop.js`.\
+Installing: `npm i owop-js`.\
 **REQUIRES NODE.JS 12.0+!**
 
 If you found any bugs, don't forget that you can contribute too! I'm often busy so usually I'm not able to update anything quickly.

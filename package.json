@@ -1,5 +1,5 @@
 {
-  "name": "owop.js",
+  "name": "owop-js",
   "version": "2.0.0",
   "description": "The OWOP (ourworldofpixels) API.",
   "main": "index.js",
