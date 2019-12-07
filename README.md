@@ -34,7 +34,8 @@ Client.on("join", () => {
 `chunkProtect` - Chunk (un)protected. [x, y, newState].\
 `pquota` - New PQuota. [rate, per].\
 `destroy` - Socket was destroyed and won't reconnect anymore.\
-`chunk` - New chunk. [x, y, chunk, protected].
+`chunk` - New chunk. [x, y, chunk, protected].\
+`message` - New message in chat. [msg].
 
 # Options
 `ws` - Websocket server address. (default - `wss://ourworldofpixels.com`)\

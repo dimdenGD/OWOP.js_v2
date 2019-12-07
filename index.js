@@ -23,6 +23,7 @@ const error = m => console.error(chalk.red(m));
     pquota - New PQuota. [rate, per].
     destroy - Socket was destroyed and won't reconnect anymore.
     chunk - New chunk. [x, y, chunk, protected].
+    message - New message in chat. [msg].
 */ 
 
 class ChunkSystem {
@@ -572,6 +573,7 @@ class Client {
                 data = OJS.chat.recvModifier(data);
                 const nick = data.split(":")[0];
 
+                OJS.emit("message", data);
                 OJS.chat.messages.push(data);
                 if(OJS.chat.messages.length > OJS.options.maxChatBuffer) OJS.chat.messages.shift();
 
