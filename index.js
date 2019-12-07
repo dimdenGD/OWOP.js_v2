@@ -545,7 +545,7 @@ class Client {
                         OJS.util.log(`New PQuota: ${rate}x${per}`);
                         break;
                     }
-                    case OJS.options.opcodes.chunkProtected: {
+                    case OJS.options.opcode.chunkProtected: {
                         let cx = data.getInt32(1, true);
                         let cy = data.getInt32(5, true);
                         let newState = data.getUint8(9);
