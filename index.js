@@ -74,19 +74,19 @@ class ChunkSystem {
     };
     protectChunk(x, y) {
         if(typeof x !== "number" || typeof y !== "number") return error("ChunkSystem.protectChunk: failed to protect chunk (invalid coords).");
-        if(!this.chunksProtected[x]) this.chunksProtected[x] = [];
-        return this.chunksProtected[x][y] = true;
+        if(!this.chunkProtected[x]) this.chunkProtected[x] = [];
+        return this.chunkProtected[x][y] = true;
     }
     unProtectChunk(x, y) {
         if(typeof x !== "number" || typeof y !== "number") return error("ChunkSystem.unprotectChunk: failed to unprotect chunk (invalid coords).");
-        if(!this.chunksProtected[x]) return false;
-        this.chunksProtected[x][y] = false;
+        if(!this.chunkProtected[x]) return false;
+        this.chunkProtected[x][y] = false;
         return true;
     }
     isProtected(x, y) {
         if(typeof x !== "number" || typeof y !== "number") return error("ChunkSystem.isProtected: failed to check (invalid coords).");
-        if(!this.chunksProtected[x]) return false;
-        return Boolean(this.chunksProtected[x][y]);
+        if(!this.chunkProtected[x]) return false;
+        return Boolean(this.chunkProtected[x][y]);
     }
 };
 
