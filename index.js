@@ -675,7 +675,7 @@ class Client {
     };
     off(event, fn) {
         if(!this._events[event]) return;
-        for(let i in this._events) if(String(this._events[i]) === String(fn)) delete this._events[i];
+        for(let i in this._events[event]) if(String(this._events[event][i]) === String(fn)) this._events[event].splice(i, 1);
     }
 };
 
