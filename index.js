@@ -45,6 +45,12 @@ class ChunkSystem {
         if(!this.chunks[x]) return;
         return this.chunks[x][y];
     };
+    removeChunk(x, y) {
+        if(!this.chunks[x]) return;
+        if(!this.chunks[x][y]) return;
+
+        return this.chunks[x].splice(y, 1);
+    };
     setPixel(x, y, rgb) {
         if(!rgb || typeof rgb !== "object" || typeof x !== "number" || typeof y !== "number") return error("ChunkSystem.setPixel: failed to set pixel (no/wrong rgb or invalid coords).");
         const chunkX = Math.floor(x/Client.options.chunkSize);

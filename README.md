@@ -166,6 +166,9 @@ Set chunk data.
 ### Chunks.getChunk(x, y, raw)
 Get chunk data. Usually it tries to get chunks by normal coords, but if you'll set `raw` arg, you can use your own chunk coords.
 
+### Chunks.removeChunk(x, y)
+Remove chunk.
+
 ### Chunks.setPixel(x, y, rgb)
 Set pixel in chunk.
 
