@@ -148,7 +148,7 @@ Example: `Client.players[15035]`.
 - **Client.util.log** - console log with `Client.player.id` or `option.id` if `option.noLog` is enabled.
 - **Client.util.decompress** - Chunk decompressor. Vars :(
 
-Client also has primitive EventEmitter - `on`, `once`, `emit`.
+Client also has primitive EventEmitter - `on`, `once`, `emit`, `off`.
 
 ## ChunkSystem
 This class is created just for **`Chunks`**, I don't think you'll ever need to use it.
