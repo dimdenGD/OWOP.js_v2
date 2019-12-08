@@ -666,6 +666,10 @@ class Client {
             this._events[event][i][0](...args);
             this._events[event].splice(i, 1);
         }
+    };
+    off(event, fn) {
+        if(!this._events[event]) return;
+        for(let i in this._events) if(String(this._events[i]) === String(fn)) delete this._events[i];
     }
 };
 
