@@ -1,6 +1,6 @@
 {
   "name": "owop-js",
-  "version": "2.0.4",
+  "version": "2.0.6",
   "description": "The OWOP (ourworldofpixels) API.",
   "main": "index.js",
   "scripts": {},
@@ -26,5 +26,8 @@
     "chalk": "^3.0.0",
     "ws": "^7.2.0"
   },
-  "publishConfig_G": { "registry": "https://npm.pkg.github.com/" }
+  "publishConfig_G": { "registry": "https://npm.pkg.github.com/" },
+  "engines": {
+    "node": ">=12.0.0"
+  }
 }

@@ -238,15 +238,12 @@ class Client {
 
                 for (let i = 0; i < world.length && i < 24; i++) {
                     let charCode = world.charCodeAt(i);
-                    if ((charCode < 123 && charCode > 96) || (charCode < 58 && charCode > 47) || charCode === 95 || charCode === 46) {
+                    if ((charCode < 123 && charCode > 96) || (charCode < 58 && charCode > 47) || charCode === 95 || charCode === 46)
                         ints.push(charCode);
-                    }
                 }
                 let array = new ArrayBuffer(ints.length + 2);
                 let dv = new DataView(array);
-                for (let i = ints.length; i--;) {
-                    dv.setUint8(i, ints[i]);
-                }   
+                for (let i = ints.length; i--;) dv.setUint8(i, ints[i]);
                 dv.setUint16(ints.length, OJS.options.misc.worldVerification, true);
                 OJS.net.ws.send(array);
                 OJS.util.log(`Joining world: ${world}`);
@@ -409,7 +406,6 @@ class Client {
                 const opcode = data.getUint8(0);
                 switch(opcode) {
                     case OJS.options.opcode.setId: {
-                        OJS.emit("join", OJS.world.name);
                         OJS.emit("id", data.getUint32(1, true));
                         OJS.player.id = data.getUint32(1, true);
                         OJS.net.isWorldConnected = true;
@@ -418,6 +414,7 @@ class Client {
                         if(options.adminlogin) OJS.chat.send("/adminlogin " + options.adminlogin);
                         if(options.modlogin) OJS.chat.send("/modlogin " + options.modlogin); // Not working at the moment
                         if(options.pass) OJS.chat.send("/pass " + options.pass);
+                        OJS.emit("join", OJS.world.name);
                         break;
                     }
                     case OJS.options.opcode.worldUpdate: {
