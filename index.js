@@ -366,7 +366,7 @@ class Client {
             },
             requestChunk(x, y, inaccurate) {
                 if(OJS.net.ws.readyState !== 1 || !OJS.net.isWebsocketConnected) return false;
-                if(!x && !y) {
+                if(typeof x !== "number" && typeof y !== "number") {
                     x = OJS.player.x;
                     y = OJS.player.y;
                     inaccurate = true;
