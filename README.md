@@ -13,7 +13,7 @@ This is quite new package, so if you'll find any bugs, don't forget that you can
 #### OPM Example
 ```js
 const OJS = OPM.require("owop-js");
-const Client new OJS.Client({
+const Client = new OJS.Client({
     reconnect: true
 });
 
