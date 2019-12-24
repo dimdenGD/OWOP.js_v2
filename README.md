@@ -44,6 +44,7 @@ Client.on("join", () => {
 `update` - Player in world updates [player object].\
 `pixel` - New pixel in world [x, y, [r, g, b]].\
 `disconnect` - Someone in world disconnected [player object].\
+`connect` - Someone in world connected [id].\
 `teleport` - got 'teleport' opcode. Very rare. [x, y].\
 `rank` - Got new rank. [rank].\
 `captcha` - Captcha state. [gcaptcha id].\
