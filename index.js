@@ -446,6 +446,7 @@ class Client {
                         }
                         if (updated) {
                             for(let i in updates) {
+                                if(!OJS.players[i]) OJS.emit("connect", i);
                                 OJS.players[i] = {
                                     id: i,
                                     x: updates[i].x >> 4,
