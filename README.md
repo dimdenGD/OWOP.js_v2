@@ -120,16 +120,16 @@ Set color of bot.
 Protect chunk. You need to be admin to use this but you can ignore this if you'll use `unsafe` option. 
 #### Client.world.clearChunk(x = player.x, y = player.y, rgb = player.color)
 Clear chunk. You need to be admin to use this but you can ignore this if you'll use `unsafe` option. 
-#### Client.world.requestChunk(x = player.x, y = player.y, innacurate)
-Request chunk, it'll be loaded to `ChunkSystem`. If `inaccurate` argument is passed, it'll transform `x` and `y` to `chunkX` and `chunkY`, so you can use normal coords to request chunks.
+#### await Client.world.requestChunk(x = player.x, y = player.y, innacurate)
+Request chunk, it'll be loaded to `ChunkSystem`. If `inaccurate` argument is passed, it'll transform `x` and `y` to `chunkX` and `chunkY`, so you can use normal coords to request chunks. Returns raw chunk.
 ```js
 if(inaccurate) {
 	x = Math.floor(x/OJS.options.chunkSize);
 	y = Math.floor(y/OJS.options.chunkSize);
 };
 ```
-#### Client.world.getPixel(x = player.x, y = player.y)
-Get pixel from `ChunkSystem`. If there's no that chunk loaded, it'll send `Client.world.requestChunk` and will return undefined. I'd better manually use `Chunks.getPixel(x, y)`.
+#### await Client.world.getPixel(x = player.x, y = player.y)
+Request chunk and get pixel.
 
 ### Client.player
 - Client.player.x

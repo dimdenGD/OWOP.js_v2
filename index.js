@@ -170,7 +170,7 @@ class Client {
 
         if(options.controller) {
             const stdin = process.openStdin();
-            stdin.on("data", d => {
+            stdin.on("data", async d => {
                 const msg = d.toString().trim();
                 try {
                     return console.log(String(eval(msg)).slice(0, 100))
@@ -365,27 +365,34 @@ class Client {
                 return false;
             },
             requestChunk(x, y, inaccurate) {
-                if(OJS.net.ws.readyState !== 1 || !OJS.net.isWebsocketConnected) return false;
-                if(typeof x !== "number" && typeof y !== "number") {
-                    x = OJS.player.x;
-                    y = OJS.player.y;
-                    inaccurate = true;
-                };
-                if(inaccurate) {
-                    x = Math.floor(x/OJS.options.chunkSize);
-                    y = Math.floor(y/OJS.options.chunkSize);
-                };
-                let wb = OJS.options.worldBorder;
-                if (x > wb || y > wb || x < ~wb || y < ~wb) return;
-                let dv = new DataView(new ArrayBuffer(8));
-                dv.setInt32(0, x, true);
-                dv.setInt32(4, y, true);
-                OJS.net.ws.send(dv.buffer);
-                return true;
+                return new Promise((resolve, reject) => {
+                    if(OJS.net.ws.readyState !== 1 || !OJS.net.isWebsocketConnected) return reject(false);
+                    if(typeof x !== "number" && typeof y !== "number") {
+                        x = OJS.player.x;
+                        y = OJS.player.y;
+                        inaccurate = true;
+                    };
+                    if(inaccurate) {
+                        x = Math.floor(x/OJS.options.chunkSize);
+                        y = Math.floor(y/OJS.options.chunkSize);
+                    };
+                    if(Chunks.getChunk(x, y)) return resolve(Chunks.getChunk(x, y));
+                    let wb = OJS.options.worldBorder;
+                    if (x > wb || y > wb || x < ~wb || y < ~wb) return reject(false);
+                    let dv = new DataView(new ArrayBuffer(8));
+                    dv.setInt32(0, x, true);
+                    dv.setInt32(4, y, true);
+                    OJS.net.ws.send(dv.buffer);
+                    const fn = (...args) => {
+                        if(args[0] !== x || args[1] !== y) return;
+                        OJS.off("chunk", fn);
+                        resolve(args[2]);
+                    };
+                    OJS.on("chunk", fn);
+                });
             },
-            getPixel(x = OJS.player.x, y = OJS.player.y) {
-                // It'll return undefined on unknown chunk but it'll request it, so you'll need to getPixel(x, y) again. I suggest you requesting chunks manually and getting them from ChunkSystem.
-                if(!Chunks.getChunk(x, y)) OJS.world.requestChunk(x, y, true);
+            async getPixel(x = OJS.player.x, y = OJS.player.y) {
+                if(!Chunks.getChunk(x, y)) await OJS.world.requestChunk(x, y, true);
                 return Chunks.getPixel(x, y);
             }
         };
