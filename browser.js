@@ -244,12 +244,12 @@
                     OJS.net.ws.send(dv.buffer);
                     return true;
                 },
-                setPixel(x = OJS.player.x, y = OJS.player.y, color = OJS.player.color, sneaky) {
+                setPixel(x = OJS.player.x, y = OJS.player.y, color = OJS.player.color, sneaky, move) {
                     if (OJS.net.ws.readyState !== 1 || !OJS.net.isWebsocketConnected || OJS.player.rank === OJS.RANK.NONE) return false;
                     if (!OJS.net.bucket.canSpend(1)) return false;
                     const lX = OJS.player.x,
                         lY = OJS.player.y;
-                    OJS.world.move(x, y);
+                    if (move) OJS.world.move(x, y);
                     const dv = new DataView(new ArrayBuffer(11));
                     dv.setInt32(0, x, true);
                     dv.setInt32(4, y, true);
