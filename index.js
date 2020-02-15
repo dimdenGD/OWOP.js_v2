@@ -296,13 +296,11 @@ class Client {
                 if(OJS.net.ws.readyState !== 1 || !OJS.net.isWebsocketConnected || OJS.player.rank === OJS.RANK.NONE) return false;
                 if(!OJS.net.bucket.canSpend(1)) return false;
                 const lX = OJS.player.x, lY = OJS.player.y;
-                var distx = Math.trunc(x / OJS.options.chunkSize) - Math.trunc(this.lastSentX / (OJS.options.chunkSize * 16)); distx *= distx;
-		            var disty = Math.trunc(y / OJS.options.chunkSize) - Math.trunc(this.lastSentY / (OJS.options.chunkSize * 16)); disty *= disty;
-		            var dist = Math.sqrt(distx + disty);
-                var moved = false;
-                if(OJS.player.rank != 3 && dist>=3) {
+                var distx = Math.trunc(x / OJS.options.chunkSize) - Math.trunc((OJS.player.x<<4) / (OJS.options.chunkSize * 16)); distx *= distx;
+		        var disty = Math.trunc(y / OJS.options.chunkSize) - Math.trunc((OJS.player.y<<4) / (OJS.options.chunkSize * 16)); disty *= disty;
+		        var dist = Math.sqrt(distx + disty);
+                if(OJS.player.rank != 3 && dist>3) {
                   OJS.world.move(x, y);
-                  moved = true;
                 }
 				
                 
@@ -317,7 +315,7 @@ class Client {
                 OJS.player.color = color;
 
                 OJS.net.ws.send(dv.buffer);
-                if(sneaky && moved) OJS.world.move(lX, lY);
+                if(sneaky && OJS.player.x != lX && OJS.player.y != lY) OJS.world.move(lX, lY);
                 return true;
             },
             setTool(id = 0) {
