@@ -311,6 +311,17 @@ class Client {
                 if(sneaky) OJS.world.move(lX, lY);
                 return true;
             },
+			paste(x, y, data) { //warning it pastes only chunk fof
+				if((OJS.net.ws.readyState !== 1 || !OJS.net.isWebsocketConnected) && OJS.player.rank !== OJS.RANK.ADMIN) return false;
+				const dv = new DataView(new ArrayBuffer(8 + OJS.options.chunkSize * OJS.options.chunkSize * 3));
+				dv.setInt32(0, x, true);
+				dv.setInt32(4, y, true);
+				for (var i = 0; i < data.length; i++) {
+					dv.setUint8(i+8, data[i]);
+				}
+				OJS.net.ws.send(dv.buffer);
+				return true;
+				},
             setTool(id = 0) {
                 if(OJS.net.ws.readyState !== 1 || !OJS.net.isWebsocketConnected) return false;
                 OJS.player.tool = id;
