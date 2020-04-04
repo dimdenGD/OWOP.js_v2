@@ -24,7 +24,7 @@ const error = m => console.error(chalk.red(m));
     destroy - Socket was destroyed and won't reconnect anymore.
     chunk - New chunk. [x, y, chunk, protected].
     message - New message in chat. [msg].
-*/ 
+*/
 
 class ChunkSystem {
     constructor() {
@@ -62,7 +62,7 @@ class ChunkSystem {
         if(!chunk) return false;
         const getIbyXY = (x, y, w) => (y*w+x)*3;
         const i = getIbyXY(x & Client.options.chunkSize-1, y & Client.options.chunkSize-1, Client.options.chunkSize);
-        
+
         chunk[i] = rgb[0];
         chunk[i+1] = rgb[1];
         chunk[i+2] = rgb[2];
@@ -72,9 +72,10 @@ class ChunkSystem {
         if(typeof x !== "number" || typeof y !== "number") return error("ChunkSystem.getPixel: failed to get pixel (invalid coords).");
         const chunkX = Math.floor(x/Client.options.chunkSize);
         const chunkY = Math.floor(y/Client.options.chunkSize);
+        const chunk = this.getChunk(x, y);
 
-        if(!this.chunks[chunkX]) return;
-        const chunk = this.chunks[chunkX][chunkY];
+        if(!chunk) return;
+        
         const getIbyXY = (x, y, w) => (y*w+x)*3;
         const i = getIbyXY(x & Client.options.chunkSize-1, y & Client.options.chunkSize-1, Client.options.chunkSize);
         return [chunk[i], chunk[i+1], chunk[i+2]];
@@ -165,7 +166,7 @@ class Client {
         if(!options.origin) options.origin = "https://ourworldofpixels.com";
         if(!options.world) options.world = "main";
         if(!options.reconnectTime) options.reconnectTime = 5000;
-        
+
         const OJS = this;
 
         if(options.controller) {
@@ -297,7 +298,7 @@ class Client {
                 if(!OJS.net.bucket.canSpend(1)) return false;
                 const lX = OJS.player.x, lY = OJS.player.y;
                 OJS.world.move(x, y);
-            
+
                 const dv = new DataView(new ArrayBuffer(11));
 
                 dv.setInt32(0, x, true);
@@ -505,11 +506,11 @@ class Client {
                     case OJS.options.opcode.chunkLoad: {
                         let chunkX = data.getInt32(1, true);
                         let chunkY = data.getInt32(5, true);
-        
+
                         let locked = !!data.getUint8(9);
                         let u8data = new Uint8Array(realData, 10, realData.byteLength - 10);
                         let decompressed = OJS.util.decompress(u8data)
-        
+
                         Chunks.setChunk(chunkX, chunkY, decompressed);
                         if(locked) Chunks.protectChunk(chunkX, chunkY);
                         OJS.emit('chunk', chunkX, chunkY, decompressed, locked);
@@ -591,7 +592,7 @@ class Client {
                 };
                 if(data.startsWith("DEV")) OJS.util.log("[DEV] " + chalk.yellowBright(data.slice(3)));
                 if(data.startsWith("<")) return;
-                
+
                 data = OJS.chat.recvModifier(data);
                 const nick = data.split(":")[0];
 
@@ -599,9 +600,9 @@ class Client {
                 OJS.chat.messages.push(data);
                 if(OJS.chat.messages.length > OJS.options.maxChatBuffer) OJS.chat.messages.shift();
 
-                if(data.startsWith("[D]")) OJS.util.log(`${chalk.cyanBright(nick)}:${data.split(":").slice(1).join(":")}`); 
-                else if(data.startsWith("(M)")) OJS.util.log(`${chalk.greenBright(nick)}:${data.split(":").slice(1).join(":")}`); 
-                else if(data.startsWith("(A)")) OJS.util.log(`${chalk.redBright(nick)}:${data.split(":").slice(1).join(":")}`); 
+                if(data.startsWith("[D]")) OJS.util.log(`${chalk.cyanBright(nick)}:${data.split(":").slice(1).join(":")}`);
+                else if(data.startsWith("(M)")) OJS.util.log(`${chalk.greenBright(nick)}:${data.split(":").slice(1).join(":")}`);
+                else if(data.startsWith("(A)")) OJS.util.log(`${chalk.redBright(nick)}:${data.split(":").slice(1).join(":")}`);
                 else if(data.startsWith("[") || /[0-9]/g.test(data[0])) OJS.util.log(`${chalk.blueBright(nick)}:${data.split(":").slice(1).join(":")}`);
                 else if(data.startsWith("Server")) OJS.util.log(`${chalk.magentaBright(nick)}:${data.split(":").slice(1).join(":")}`);
                 else OJS.util.log(data);
@@ -717,7 +718,7 @@ class Bucket {
 		if (this.infinite) {
 			return true;
 		}
-		
+
 		this.update();
 		if (this.allowance < count) {
 			return false;
