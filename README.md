@@ -6,9 +6,7 @@ Installing: `npm i owop-js`.\
 
 ![Nodejs](https://img.shields.io/badge/-Node.js%2012.0%2B-brightgreen?style=for-the-badge&logo=node.js&labelColor=1a1a1a)
 
-This is quite new package, so if you'll find any bugs, don't forget that you can contribute too! I'm often busy, so usually I'm not able to update anything quickly.
-
-*You can also use browser version in [OPM](https://opm.glitch.me "OPM"). In OPM version there is `simpleChunks` option for using OWOP internal chunks, `renderCaptcha` for captcha rendering, and there is no `agent`, `origin`, `controller`, and other node.js only options.*
+*You can also use browser version in [OPM](https://opm.dimden.dev "OPM"). In OPM version there is `simpleChunks` option for using OWOP internal chunks, `renderCaptcha` for captcha rendering, and there is no `agent`, `origin`, `controller`, and other node.js only options.*
 
 #### OPM Example
 ```js
