@@ -387,7 +387,7 @@ class Client {
                         x = Math.floor(x/OJS.options.chunkSize);
                         y = Math.floor(y/OJS.options.chunkSize);
                     };
-                    if(Chunks.getChunk(x, y)) return resolve(Chunks.getChunk(x, y));
+                    if(Chunks.getChunk(x, y, true)) return resolve(Chunks.getChunk(x, y, true));
                     let wb = OJS.options.worldBorder;
                     if (x > wb || y > wb || x < ~wb || y < ~wb) return reject(false);
                     let dv = new DataView(new ArrayBuffer(8));
