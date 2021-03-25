@@ -24,45 +24,44 @@ const error = m => console.error(chalk.red(m));
     destroy - Socket was destroyed and won't reconnect anymore.
     chunk - New chunk. [x, y, chunk, protected].
     message - New message in chat. [msg].
-*/ 
+*/
 
 class ChunkSystem {
     constructor() {
-        this.chunks = [];
-        this.chunkProtected = [];
+        this.chunks = new Map();
+        this.chunkProtected = new Map();
     };
     setChunk(x, y, data) {
         if(!data || typeof x !== "number" || typeof y !== "number") return error("ChunkSystem.setChunk: failed to set chunk (no data or invalid coords).");
-        if(data.constructor.name !== "Array") data = Array.from(data);
-        if(!this.chunks[x]) this.chunks[x] = [];
-        return this.chunks[x][y] = data;
+        if(!this.chunks.has(x)) this.chunks.set(x, new Map());
+        return this.chunks.get(x).set(y, data);
     };
     getChunk(x, y, raw) {
         if(!raw) {
             x = Math.floor(x/Client.options.chunkSize);
             y = Math.floor(y/Client.options.chunkSize);
         };
-        if(!this.chunks[x]) return;
-        return this.chunks[x][y];
+        if(!this.chunks.has(x)) return;
+        return this.chunks.get(x).get(y);
     };
     removeChunk(x, y) {
-        if(!this.chunks[x]) return;
-        if(!this.chunks[x][y]) return;
+        if(!this.chunks.has(x)) return;
+        if(!this.chunks.get(x).has(y)) return;
 
-        return this.chunks[x].splice(y, 1);
+        return this.chunks.get(x).delete(y);
     };
     setPixel(x, y, rgb) {
         if(!rgb || typeof rgb !== "object" || typeof x !== "number" || typeof y !== "number") return error("ChunkSystem.setPixel: failed to set pixel (no/wrong rgb or invalid coords).");
         const chunkX = Math.floor(x/Client.options.chunkSize);
         const chunkY = Math.floor(y/Client.options.chunkSize);
 
-        if(!this.chunks[chunkX]) return;
+        if(!this.chunks.has(chunkX)) return;
 
-        const chunk = this.chunks[chunkX][chunkY];
+        const chunk = this.chunks.get(chunkX).get(chunkY);
         if(!chunk) return false;
         const getIbyXY = (x, y, w) => (y*w+x)*3;
         const i = getIbyXY(x & Client.options.chunkSize-1, y & Client.options.chunkSize-1, Client.options.chunkSize);
-        
+
         chunk[i] = rgb[0];
         chunk[i+1] = rgb[1];
         chunk[i+2] = rgb[2];
@@ -73,27 +72,27 @@ class ChunkSystem {
         const chunkX = Math.floor(x/Client.options.chunkSize);
         const chunkY = Math.floor(y/Client.options.chunkSize);
 
-        if(!this.chunks[chunkX]) return;
-        const chunk = this.chunks[chunkX][chunkY];
+        if(!this.chunks.has(chunkX)) return;
+        const chunk = this.chunks.get(chunkX).get(chunkY);
         const getIbyXY = (x, y, w) => (y*w+x)*3;
         const i = getIbyXY(x & Client.options.chunkSize-1, y & Client.options.chunkSize-1, Client.options.chunkSize);
         return [chunk[i], chunk[i+1], chunk[i+2]];
     };
     protectChunk(x, y) {
         if(typeof x !== "number" || typeof y !== "number") return error("ChunkSystem.protectChunk: failed to protect chunk (invalid coords).");
-        if(!this.chunkProtected[x]) this.chunkProtected[x] = [];
-        return this.chunkProtected[x][y] = true;
+        if(!this.chunkProtected.has(x)) this.chunkProtected.set(x, new Map());
+        return this.chunkProtected.get(x).set(y, true);
     }
     unProtectChunk(x, y) {
         if(typeof x !== "number" || typeof y !== "number") return error("ChunkSystem.unprotectChunk: failed to unprotect chunk (invalid coords).");
-        if(!this.chunkProtected[x]) return false;
-        this.chunkProtected[x][y] = false;
+        if(!this.chunkProtected.has(x)) return false;
+        this.chunkProtected.set(x).set(y, false);
         return true;
     }
     isProtected(x, y) {
         if(typeof x !== "number" || typeof y !== "number") return error("ChunkSystem.isProtected: failed to check (invalid coords).");
-        if(!this.chunkProtected[x]) return false;
-        return Boolean(this.chunkProtected[x][y]);
+        if(!this.chunkProtected.has(x)) return false;
+        return Boolean(this.chunkProtected.get(x).get(y));
     }
 };
 
@@ -165,7 +164,7 @@ class Client {
         if(!options.origin) options.origin = "https://ourworldofpixels.com";
         if(!options.world) options.world = "main";
         if(!options.reconnectTime) options.reconnectTime = 5000;
-        
+
         const OJS = this;
 
         if(options.controller) {
@@ -297,7 +296,7 @@ class Client {
                 if(!OJS.net.bucket.canSpend(1)) return false;
                 const lX = OJS.player.x, lY = OJS.player.y;
                 OJS.world.move(x, y);
-            
+
                 const dv = new DataView(new ArrayBuffer(11));
 
                 dv.setInt32(0, x, true);
@@ -505,11 +504,11 @@ class Client {
                     case OJS.options.opcode.chunkLoad: {
                         let chunkX = data.getInt32(1, true);
                         let chunkY = data.getInt32(5, true);
-        
+
                         let locked = !!data.getUint8(9);
                         let u8data = new Uint8Array(realData, 10, realData.byteLength - 10);
                         let decompressed = OJS.util.decompress(u8data)
-        
+
                         Chunks.setChunk(chunkX, chunkY, decompressed);
                         if(locked) Chunks.protectChunk(chunkX, chunkY);
                         OJS.emit('chunk', chunkX, chunkY, decompressed, locked);
@@ -591,7 +590,7 @@ class Client {
                 };
                 if(data.startsWith("DEV")) OJS.util.log("[DEV] " + chalk.yellowBright(data.slice(3)));
                 if(data.startsWith("<")) return;
-                
+
                 data = OJS.chat.recvModifier(data);
                 const nick = data.split(":")[0];
 
@@ -599,9 +598,9 @@ class Client {
                 OJS.chat.messages.push(data);
                 if(OJS.chat.messages.length > OJS.options.maxChatBuffer) OJS.chat.messages.shift();
 
-                if(data.startsWith("[D]")) OJS.util.log(`${chalk.cyanBright(nick)}:${data.split(":").slice(1).join(":")}`); 
-                else if(data.startsWith("(M)")) OJS.util.log(`${chalk.greenBright(nick)}:${data.split(":").slice(1).join(":")}`); 
-                else if(data.startsWith("(A)")) OJS.util.log(`${chalk.redBright(nick)}:${data.split(":").slice(1).join(":")}`); 
+                if(data.startsWith("[D]")) OJS.util.log(`${chalk.cyanBright(nick)}:${data.split(":").slice(1).join(":")}`);
+                else if(data.startsWith("(M)")) OJS.util.log(`${chalk.greenBright(nick)}:${data.split(":").slice(1).join(":")}`);
+                else if(data.startsWith("(A)")) OJS.util.log(`${chalk.redBright(nick)}:${data.split(":").slice(1).join(":")}`);
                 else if(data.startsWith("[") || /[0-9]/g.test(data[0])) OJS.util.log(`${chalk.blueBright(nick)}:${data.split(":").slice(1).join(":")}`);
                 else if(data.startsWith("Server")) OJS.util.log(`${chalk.magentaBright(nick)}:${data.split(":").slice(1).join(":")}`);
                 else OJS.util.log(data);
@@ -677,24 +676,21 @@ class Client {
         this._events = {};
     };
     on(event, fn) {
-        if(!this._events[event]) this._events[event] = [];
-        this._events[event].push(fn);
-    };
-    once(event, fn) {
-        if(!this._events[event]) this._events[event] = [];
-        this._events[event].push([fn]);
+        if(!this._events[event])
+			this._events[event] = new Set();
+        this._events[event].add(fn);
     };
     emit(event, ...args) {
-        if(!this._events[event]) return;
-        for(let i in this._events[event]) if(typeof this._events[event][i] === "function") this._events[event][i](...args);
-        else {
-            this._events[event][i][0](...args);
-            this._events[event].splice(i, 1);
-        }
+        if(!this._events[event])
+			return;
+        for(let handler of this._events[event].values())
+			handler(...args);
     };
     off(event, fn) {
-        if(!this._events[event]) return;
-        for(let i in this._events[event]) if(String(this._events[event][i]) === String(fn)) this._events[event].splice(i, 1);
+        if(!this._events[event])
+			return;
+        if (this._events[event].has(fn))
+			this._events[event].delete(fn);
     }
 };
 
@@ -717,7 +713,7 @@ class Bucket {
 		if (this.infinite) {
 			return true;
 		}
-		
+
 		this.update();
 		if (this.allowance < count) {
 			return false;
