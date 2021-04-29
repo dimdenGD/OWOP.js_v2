@@ -674,24 +674,36 @@ class Client {
         };
         if(options.unsafe) OJS.util.log(chalk.yellowBright("Using 'unsafe' option."));
         this._events = {};
+		this._events_once = {};
     };
     on(event, fn) {
         if(!this._events[event])
 			this._events[event] = new Set();
         this._events[event].add(fn);
     };
+	once(event, fn) {
+		if (!this._events_once[event])
+			this._events_once[event] = new Set();
+		this._events_once[event].add(fn)
+	};
     emit(event, ...args) {
-        if(!this._events[event])
-			return;
-        for(let handler of this._events[event].values())
-			handler(...args);
+        if(this._events[event] && this._events[event].size > 0)
+			for(let handler of this._events[event].values())
+				handler(...args);
+
+		if (this._events_once[event] && this._events_once[event].size > 0) {
+			for(let handler of this._events_once[event].values())
+				handler(...args);
+			this._events_once[event].clear()
+		}
     };
     off(event, fn) {
-        if(!this._events[event])
-			return;
-        if (this._events[event].has(fn))
+        if(this._events[event] && this._events[event].has(fn))
 			this._events[event].delete(fn);
-    }
+
+		if(this._events_once[event] && this._events_once[event].has(fn))
+			this._events_once[event].delete(fn);
+    };
 };
 
 class Bucket {
