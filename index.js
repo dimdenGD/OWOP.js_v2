@@ -34,7 +34,8 @@ class ChunkSystem {
     setChunk(x, y, data) {
         if(!data || typeof x !== "number" || typeof y !== "number") return error("ChunkSystem.setChunk: failed to set chunk (no data or invalid coords).");
         if(!this.chunks.has(x)) this.chunks.set(x, new Map());
-        return this.chunks.get(x).set(y, data);
+        this.chunks.get(x).set(y, data);
+		return data;
     };
     getChunk(x, y, raw) {
         if(!raw) {
@@ -74,6 +75,7 @@ class ChunkSystem {
 
         if(!this.chunks.has(chunkX)) return;
         const chunk = this.chunks.get(chunkX).get(chunkY);
+		if (!chunk) return;
         const getIbyXY = (x, y, w) => (y*w+x)*3;
         const i = getIbyXY(x & Client.options.chunkSize-1, y & Client.options.chunkSize-1, Client.options.chunkSize);
         return [chunk[i], chunk[i+1], chunk[i+2]];
@@ -81,7 +83,8 @@ class ChunkSystem {
     protectChunk(x, y) {
         if(typeof x !== "number" || typeof y !== "number") return error("ChunkSystem.protectChunk: failed to protect chunk (invalid coords).");
         if(!this.chunkProtected.has(x)) this.chunkProtected.set(x, new Map());
-        return this.chunkProtected.get(x).set(y, true);
+        this.chunkProtected.get(x).set(y, true)
+		return true;
     }
     unProtectChunk(x, y) {
         if(typeof x !== "number" || typeof y !== "number") return error("ChunkSystem.unprotectChunk: failed to unprotect chunk (invalid coords).");
