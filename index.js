@@ -155,6 +155,7 @@ class Client {
      * @param {?boolean} options.reconnect Reconnect if disconnected. ✔️
      * @param {?string} options.adminlogin Admin login. ✔️
      * @param {?string} options.modlogin Mod login. ✔️
+     * @param {?string} options.nick Set Nick. ✔️
      * @param {?string} options.pass Pass for world. ✔️
      * @param {?string} options.captchapass Captcha pass. ✔️
      * @param {?string} options.teleport Teleport on 'teleport' opcode. ✔️
@@ -439,6 +440,7 @@ class Client {
                         OJS.util.log(chalk.green(`Joined world '${OJS.world.name}' and got id '${data.getUint32(1, true)}'`));
                         if(options.adminlogin) OJS.chat.send("/adminlogin " + options.adminlogin);
                         if(options.modlogin) OJS.chat.send("/modlogin " + options.modlogin); // Not working at the moment
+			if(options.nick) OJS.chat.send("/nick " + options.nick);
                         if(options.pass) OJS.chat.send("/pass " + options.pass);
                         OJS.emit("join", OJS.world.name);
                         break;
