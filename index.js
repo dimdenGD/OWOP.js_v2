@@ -89,7 +89,7 @@ class ChunkSystem {
     unProtectChunk(x, y) {
         if(typeof x !== "number" || typeof y !== "number") return error("ChunkSystem.unprotectChunk: failed to unprotect chunk (invalid coords).");
         if(!this.chunkProtected.has(x)) return false;
-        this.chunkProtected.set(x).set(y, false);
+        this.chunkProtected.get(x).set(y, false);
         return true;
     }
     isProtected(x, y) {
