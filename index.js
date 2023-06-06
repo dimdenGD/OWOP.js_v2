@@ -357,7 +357,7 @@ class Client {
             },
             protectChunk(x = OJS.player.x, y = OJS.player.y, newState = 1) {
                 if(OJS.net.ws.readyState !== 1 || !OJS.net.isWebsocketConnected) return false;
-                if(OJS.player.rank < OJS.RANK.ADMIN && !options.unsafe) return false;
+                if(OJS.player.rank < OJS.RANK.MODERATOR && !options.unsafe) return false;
                 const dv = new DataView(new ArrayBuffer(10));
                 dv.setInt32(0, x, true);
                 dv.setInt32(4, y, true);
@@ -366,13 +366,26 @@ class Client {
                 return true;
             },
             clearChunk(x = OJS.player.x, y = OJS.player.y, rgb = OJS.player.color) {
-                if (OJS.player.rank === OJS.RANK.ADMIN || options.unsafe) {
+                if (OJS.player.rank >= OJS.RANK.MODERATOR || options.unsafe) {
                     const dv = new DataView(new ArrayBuffer(13));
                     dv.setInt32(0, x, true);
                     dv.setInt32(4, y, true);
                     dv.setUint8(8, rgb[0]);
                     dv.setUint8(9, rgb[1]);
                     dv.setUint8(10, rgb[2]);
+                    OJS.net.ws.send(dv.buffer);
+                    return true;
+                }
+                return false;
+            },
+	    setChunk(x, y, data) {
+                if (OJS.player.rank >= OJS.RANK.MODERATOR || options.unsafe) {
+                    const dv = new DataView(new ArrayBuffer(776));
+                    dv.setInt32(0, x, true);
+                    dv.setInt32(4, y, true);
+                    const u8 = new Uint8Array(dv.buffer);
+		    //this looks hacky but it allows data to be a typedarray, dataview, or node.js buffer
+		    u8.set(new Uint8Array(data.buffer, data.byteOffset, data.byteLength), 8);
                     OJS.net.ws.send(dv.buffer);
                     return true;
                 }
