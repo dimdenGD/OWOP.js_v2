@@ -378,6 +378,19 @@ class Client {
                 }
                 return false;
             },
+	    setChunk(x, y, data) {
+                if (OJS.player.rank === OJS.RANK.ADMIN || options.unsafe) {
+                    const dv = new DataView(new ArrayBuffer(776));
+                    dv.setInt32(0, x, true);
+                    dv.setInt32(4, y, true);
+                    const u8 = new Uint8Array(dv.buffer);
+		    //this looks hacky but it allows data to be a typedarray, dataview, or node.js buffer
+		    u8.set(new Uint8Array(data.buffer, data.byteOffset, data.byteLength), 8);
+                    OJS.net.ws.send(dv.buffer);
+                    return true;
+                }
+                return false;
+            },
             requestChunk(x, y, inaccurate) {
                 return new Promise((resolve, reject) => {
                     if(OJS.net.ws.readyState !== 1 || !OJS.net.isWebsocketConnected) return reject(false);
