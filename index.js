@@ -357,7 +357,7 @@ class Client {
             },
             protectChunk(x = OJS.player.x, y = OJS.player.y, newState = 1) {
                 if(OJS.net.ws.readyState !== 1 || !OJS.net.isWebsocketConnected) return false;
-                if(OJS.player.rank < OJS.RANK.MODERATOR && !options.unsafe) return false;
+                if(OJS.player.rank < OJS.RANK.ADMIN && !options.unsafe) return false;
                 const dv = new DataView(new ArrayBuffer(10));
                 dv.setInt32(0, x, true);
                 dv.setInt32(4, y, true);
@@ -366,7 +366,7 @@ class Client {
                 return true;
             },
             clearChunk(x = OJS.player.x, y = OJS.player.y, rgb = OJS.player.color) {
-                if (OJS.player.rank >= OJS.RANK.MODERATOR || options.unsafe) {
+                if (OJS.player.rank === OJS.RANK.ADMIN || options.unsafe) {
                     const dv = new DataView(new ArrayBuffer(13));
                     dv.setInt32(0, x, true);
                     dv.setInt32(4, y, true);
@@ -379,7 +379,7 @@ class Client {
                 return false;
             },
 	    setChunk(x, y, data) {
-                if (OJS.player.rank >= OJS.RANK.MODERATOR || options.unsafe) {
+                if (OJS.player.rank === OJS.RANK.ADMIN || options.unsafe) {
                     const dv = new DataView(new ArrayBuffer(776));
                     dv.setInt32(0, x, true);
                     dv.setInt32(4, y, true);
