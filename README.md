@@ -115,11 +115,11 @@ Set tool that bot has eqquiped.
 #### Client.world.setColor(color = [0, 0, 0])
 Set color of bot.
 #### Client.world.protectChunk(x = player.x, y = player.y, newState = 1)
-Protect chunk. You need to be moderator to use this but you can ignore this if you'll use `unsafe` option. 
+Protect chunk. You need to be admin to use this but you can ignore this if you'll use `unsafe` option. 
 #### Client.world.clearChunk(x = player.x, y = player.y, rgb = player.color)
-Clear chunk. You need to be moderator to use this but you can ignore this if you'll use `unsafe` option. 
+Clear chunk. You need to be admin to use this but you can ignore this if you'll use `unsafe` option. 
 #### Client.world.setChunk(x, y, data)
-Paste chunk. You need to be moderator to use this but you can ignore this if you'll use `unsafe` option. Data must be a TypedArray, DataView, or Node.js Buffer 768 bytes long, containing raw RGB chunk data.
+Paste chunk. You need to be admin to use this but you can ignore this if you'll use `unsafe` option. Data must be a TypedArray, DataView, or Node.js Buffer 768 bytes long, containing raw RGB chunk data.
 #### await Client.world.requestChunk(x = player.x, y = player.y, innacurate)
 Request chunk, it'll be loaded to `ChunkSystem`. If `inaccurate` argument is passed, it'll transform `x` and `y` to `chunkX` and `chunkY`, so you can use normal coords to request chunks. Returns raw chunk.
 ```js
