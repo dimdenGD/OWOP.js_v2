@@ -753,7 +753,11 @@ class Bucket {
 	};
 	getTimeToRestore() {
 		if (this.allowance >= this.rate) return 0;
-            	return Math.floor((this.rate - this.allowance) / (this.rate / this.time));
+            	return (this.rate - this.allowance) / (this.rate / this.time);
+	}
+	async waitUntilRestore() {
+                const restoreTime = this.getTimeToRestore() * 1000;
+                await new Promise(resolve => setTimeout(resolve, restoreTime));
 	}
 };
 
