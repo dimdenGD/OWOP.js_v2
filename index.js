@@ -751,6 +751,10 @@ class Bucket {
 		this.allowance -= count;
 		return true;
 	};
+	getTimeToRestore() {
+		if (this.allowance >= this.rate) return 0;
+            	return Math.floor((this.rate - this.allowance) / (this.rate / this.time));
+	}
 };
 
 module.exports = {
