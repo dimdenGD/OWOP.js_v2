@@ -199,6 +199,26 @@ Unprotect chunk.
 ### Chunk.isProtected(x, y)
 Is chunk protected.
 
+### Bucket
+### Client.net.bucket
+- Client.net.bucket.allowance
+- Client.net.bucket.rate
+- Client.net.bucket.time
+- Client.net.bucket.infinite
+- Client.net.bucket.lastCheck
+
+### Bucket.update()
+Update allowance.
+
+### Bucket.canSpend(count)
+Returns boolean if current allowance is enough to spend X pixels.
+
+### Bucket.getTimeToRestore()
+Returns the time in milliseconds needed to fully restore the placebucket.
+
+### Bucket.waitUntilRestore()
+Returns a sleep promise with the time of `Bucket.getTimeToRestore()`
+
 # License & Author
 
 License - MIT.\
